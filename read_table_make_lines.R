@@ -2,9 +2,10 @@ library(tidyverse)
 library(readxl)
 library(glue)
 
+# Rudimentary read the distance table file ------
 distance_table <- read_excel("HarborGarden-to-WF.xlsx")
 
-# Just keep the indicated fields
+# Just keep the indicated fields -------
 distances <- distance_table %>% 
   transmute(key = `key_from:From key`, 
             k_to = `key_to:To key`,
@@ -20,23 +21,28 @@ distances <- distance_table %>%
 length(unique(distances$key)) == 1
 length(unique(distances$k_to)) == 7  ## check to see if it matches the number of distance lines, in this case 7
 
+# View(distances)    # Check it out!
 
 
 # Form output polyline text file lines ------------------------------------
 
 distances$writeline <- 
   glue('\n\n{distances$key} "{round(distances$distance,2)} miles"\n<1>{distances$from_lat} {distances$from_long},{distances$to_lat} {distances$to_long}')
+
+# Put it all in one string (might not work with a ton of tons of locations)
 outputlines <- glue::collapse(distances$writeline)
 
 
 # Output to file ----------------------------------------------------------
 
 outputname <- c("spidergram.pln")
-write_file("{NAD83}",outputname)
-write_file(outputlines,outputname, append = TRUE)
+write_file("{NAD83}",outputname)  # This is the header
+write_file(outputlines,outputname, append = TRUE)   #This is the rest of the file
+
+# That's all, folks! -------
 
 
-# Reference: Write a file that looks like this: --------------------------------------
+# Reference: Write a file that looks (sans '#' comments) like this: --------------------------------------
 
 # {NAD83}
 # Line0001 "Line 0001"
