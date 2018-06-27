@@ -1,3 +1,10 @@
+# distance_polylines 
+#   Write .pln line file from distance table of lat/long coordinates
+
+# install.packages("tidyverse")
+# install.packages("readxl")
+# install.packages("glue")
+
 library(tidyverse)
 library(readxl)
 library(glue)
@@ -18,7 +25,7 @@ distances <- distance_table %>%
             distance = `dist_mi:Distance (miles)`) %>%
   arrange(k_to) 
 
-length(unique(distances$key)) == 1
+length(unique(distances$key)) == 1   ## By convention, we are doing only one of these at a time
 length(unique(distances$k_to)) == 7  ## check to see if it matches the number of distance lines, in this case 7
 
 # View(distances)    # Check it out!
